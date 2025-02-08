@@ -3,7 +3,10 @@ import {
   useStore,
   useSignal,
   useContextProvider,
+  useOnDocument,
+  $,
 } from "@builder.io/qwik";
+import * as THREE from "three";
 import gameContext from "../game/game-context";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import {
@@ -15,6 +18,8 @@ import {
   HpBar,
 } from "~/components";
 import type { GameContextStore } from "../game/game-context";
+import moonTexture from "./moon-texture.jpeg";
+import { world, game } from "~/game";
 export default component$(() => {
   const preLoader = useSignal<HTMLDivElement | undefined>();
   const username =
@@ -37,6 +42,24 @@ export default component$(() => {
     isInGame: false,
   });
   useContextProvider(gameContext, gameStore);
+
+  useOnDocument(
+    "DOMContentLoaded",
+    $(() => {
+      const loader = new THREE.TextureLoader();
+      const texture1 = loader.load(moonTexture, () => {
+        preLoader.value?.remove();
+        const texture1Ratio = 3840 / 5760;
+
+        world.moonSurface.material.map = texture1;
+        world.moonSurface.material.map.repeat.x = 1 / texture1Ratio;
+        world.moonSurface.material.map.offset.x =
+          -(1 - texture1Ratio) / (2 * 1);
+        world.moonSurface.material.map.needsUpdate = true;
+        game(gameStore);
+      });
+    })
+  );
   return (
     <main ref={gameStore.mainEl} class="relative ">
       <Menu />

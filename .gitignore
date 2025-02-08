@@ -47,3 +47,25 @@ lerna-debug.log*
 # Firebase
 functions/server
 functions/node_modules
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output from `go run`
+*.run
+
+# Deps directory
+vendor/
+
+# Go workspace file
+go.work
